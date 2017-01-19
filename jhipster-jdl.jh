@@ -1,0 +1,32 @@
+
+entity Korisnik {
+    id Integer required,
+    username String,
+    email String,
+    password String
+}
+entity Lista {
+    id Integer required,
+title String,
+text String,
+date LocalDate,
+status Boolean
+}
+entity Rola{
+id Integer required,
+name String required
+}
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+    Korisnik{id} to Lista
+}
+// defining multiple OneToOne relationships with comments
+relationship OneToOne {
+	Korisnik{rola} to Rola
+}
+paginate Korisnik, Lista  with infinite-scroll
+dto * with mapstruct
+// Set service options to all except few
+service all with serviceImpl
+// Set an angular suffix
+angularSuffix * with mySuffix
