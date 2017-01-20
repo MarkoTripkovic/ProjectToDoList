@@ -1,6 +1,9 @@
 package org.jhipster.todo.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import org.jhipster.todo.security.jwt.JWTConfigurer;
+import org.jhipster.todo.security.jwt.TokenProvider;
 import org.jhipster.todo.service.KorisnikService;
 import org.jhipster.todo.web.rest.util.HeaderUtil;
 import org.jhipster.todo.web.rest.util.PaginationUtil;
@@ -17,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
@@ -35,6 +40,7 @@ public class KorisnikResource {
         
     @Inject
     private KorisnikService korisnikService;
+    @Inject TokenProvider tokenProvider;
 
     /**
      * POST  /korisniks : Create a new korisnik.
@@ -101,10 +107,13 @@ public class KorisnikResource {
      * @param id the id of the korisnikDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the korisnikDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/korisniks/{id}")
+    @GetMapping("/korisnik")
     @Timed
-    public ResponseEntity<KorisnikDTO> getKorisnik(@PathVariable Long id) {
-        log.debug("REST request to get Korisnik : {}", id);
+    public ResponseEntity<KorisnikDTO> getKorisnik(HttpServletRequest httpServletRequest) {
+        //log.debug("REST request to get Korisnik : {}", id);
+    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+    	Long id =Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
+    	
         KorisnikDTO korisnikDTO = korisnikService.findOne(id);
         return Optional.ofNullable(korisnikDTO)
             .map(result -> new ResponseEntity<>(

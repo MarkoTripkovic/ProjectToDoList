@@ -82,4 +82,13 @@ public class ListaServiceImpl implements ListaService{
         log.debug("Request to delete Lista : {}", id);
         listaRepository.delete(id);
     }
+
+	public List<ListaDTO> findAllByUserId(Long id) {
+		List<Lista> lista = listaRepository.findOneByKorisnikId(id);
+		List<ListaDTO> listaDTO = listaMapper.listasToListaDTOs(lista);
+		return listaDTO;
+		
+	}
+
+	
 }

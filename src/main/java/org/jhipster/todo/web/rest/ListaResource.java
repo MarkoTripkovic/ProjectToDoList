@@ -1,6 +1,11 @@
 package org.jhipster.todo.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import org.jhipster.todo.domain.Lista;
+import org.jhipster.todo.repository.ListaRepository;
+import org.jhipster.todo.security.jwt.JWTConfigurer;
+import org.jhipster.todo.security.jwt.TokenProvider;
 import org.jhipster.todo.service.ListaService;
 import org.jhipster.todo.web.rest.util.HeaderUtil;
 import org.jhipster.todo.web.rest.util.PaginationUtil;
@@ -17,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
@@ -35,6 +42,9 @@ public class ListaResource {
         
     @Inject
     private ListaService listaService;
+    @Inject TokenProvider tokenProvider;
+    @Inject
+    ListaRepository listaRepository;
 
     /**
      * POST  /listas : Create a new lista.
@@ -101,12 +111,16 @@ public class ListaResource {
      * @param id the id of the listaDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the listaDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/listas/{id}")
+    @GetMapping("/userlista")
     @Timed
-    public ResponseEntity<ListaDTO> getLista(@PathVariable Long id) {
-        log.debug("REST request to get Lista : {}", id);
-        ListaDTO listaDTO = listaService.findOne(id);
-        return Optional.ofNullable(listaDTO)
+    public ResponseEntity<List<ListaDTO>> getLista(HttpServletRequest httpServletRequest) {
+       // log.debug("REST request to get Lista : {}", id);
+    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+    	Long id = Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
+       // ListaDTO listaDTO = listaService.findOne(id);*/
+    	List<ListaDTO> dto = (List<ListaDTO>) listaService.findAllByUserId(id);
+        
+        return Optional.ofNullable(dto)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))

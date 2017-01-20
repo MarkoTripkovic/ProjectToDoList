@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.*;
 
@@ -31,6 +33,7 @@ public class TokenProvider {
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String ID_KEY = "id";
 
     private String secretKey;
 
@@ -66,6 +69,7 @@ public class TokenProvider {
         return Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY,auth)
+            .claim(ID_KEY, korisnik.getId())
             .signWith(SignatureAlgorithm.HS256, secretKey.getBytes("UTF-8"))            
             .compact();
     }
@@ -104,5 +108,44 @@ public class TokenProvider {
 
             return false;
         }
+    }
+    public String getUsernameFromToken(String token){
+    	
+    	if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7, token.length());
+            try {
+				Claims claims = Jwts.parser()
+				        .setSigningKey(secretKey.getBytes("UTF-8"))
+				        .parseClaimsJws(jwt)
+				        .getBody();
+				return claims.getSubject();
+			} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+					| IllegalArgumentException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        }
+    	return null;
+    }
+public Integer getUserIdFromToken(String token){
+    	
+    	if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7, token.length());
+            try {
+				Claims claims = Jwts.parser()
+				        .setSigningKey(secretKey.getBytes("UTF-8"))
+				        .parseClaimsJws(jwt)
+				        .getBody();
+						System.out.println(claims.get(ID_KEY));
+				return (Integer) claims.get(ID_KEY);
+			} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+					| IllegalArgumentException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        }
+    	return null;
     }
 }

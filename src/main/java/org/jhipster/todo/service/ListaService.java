@@ -33,6 +33,7 @@ public interface ListaService {
      *  @return the entity
      */
     ListaDTO findOne(Long id);
+    List<ListaDTO> findAllByUserId(Long id);
 
     /**
      *  Delete the "id" lista.

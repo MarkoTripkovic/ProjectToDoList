@@ -82,4 +82,14 @@ public class KorisnikServiceImpl implements KorisnikService{
         log.debug("Request to delete Korisnik : {}", id);
         korisnikRepository.delete(id);
     }
+
+	@Override
+	@Transactional(readOnly = true) 
+	public KorisnikDTO findByUsername(String username) {
+		Korisnik korisnik = korisnikRepository.findByUsername(username);
+        KorisnikDTO korisnikDTO = korisnikMapper.korisnikToKorisnikDTO(korisnik);
+        return korisnikDTO;
+	}
+
+	
 }

@@ -1,13 +1,18 @@
 package org.jhipster.todo.service;
 
+import org.jhipster.todo.repository.KorisnikRepository;
 import org.jhipster.todo.service.dto.KorisnikDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Service Interface for managing Korisnik.
+ * 
  */
+
 public interface KorisnikService {
 
     /**
@@ -17,7 +22,9 @@ public interface KorisnikService {
      * @return the persisted entity
      */
     KorisnikDTO save(KorisnikDTO korisnikDTO);
-
+    
+    KorisnikDTO findByUsername(String username);
+    
     /**
      *  Get all the korisniks.
      *  

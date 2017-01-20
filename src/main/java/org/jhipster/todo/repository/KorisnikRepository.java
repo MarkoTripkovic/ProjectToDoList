@@ -10,8 +10,10 @@ import java.util.Optional;
 /**
  * Spring Data JPA repository for the Korisnik entity.
  */
-@SuppressWarnings("unused")
+
 public interface KorisnikRepository extends JpaRepository<Korisnik,Long> {
 	Korisnik findByUsername(String username);
+
+	Korisnik findOne(Long id);
 
 }
