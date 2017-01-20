@@ -1,5 +1,6 @@
 package org.jhipster.todo.web.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class LoginControler {
 
 	    @PostMapping("/login")
 	    @Timed
-	    public ResponseEntity<?> authorize(@Valid @RequestBody KorisnikCredentionals credentionals, HttpServletResponse response) {
+	    public ResponseEntity<?> authorize(@Valid @RequestBody KorisnikCredentionals credentionals, HttpServletResponse response) throws UnsupportedEncodingException {
 
 	        UsernamePasswordAuthenticationToken authenticationToken =
 	            new UsernamePasswordAuthenticationToken(credentionals.getUsername(), credentionals.getPassword());
