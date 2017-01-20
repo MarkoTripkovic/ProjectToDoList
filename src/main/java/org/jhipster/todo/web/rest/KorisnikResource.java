@@ -49,7 +49,7 @@ public class KorisnikResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new korisnikDTO, or with status 400 (Bad Request) if the korisnik has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/korisniks")
+    @PostMapping("/dodavanjekorisnika")
     @Timed
     public ResponseEntity<KorisnikDTO> createKorisnik(@RequestBody KorisnikDTO korisnikDTO) throws URISyntaxException {
         log.debug("REST request to save Korisnik : {}", korisnikDTO);
@@ -57,9 +57,7 @@ public class KorisnikResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("korisnik", "idexists", "A new korisnik cannot already have an ID")).body(null);
         }
         KorisnikDTO result = korisnikService.save(korisnikDTO);
-        return ResponseEntity.created(new URI("/api/korisniks/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("korisnik", result.getId().toString()))
-            .body(result);
+        return ResponseEntity.ok() .body(result);
     }
 
     /**
@@ -71,7 +69,7 @@ public class KorisnikResource {
      * or with status 500 (Internal Server Error) if the korisnikDTO couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/korisniks")
+    @PutMapping("/izmenainfokorisnika")
     @Timed
     public ResponseEntity<KorisnikDTO> updateKorisnik(@RequestBody KorisnikDTO korisnikDTO) throws URISyntaxException {
         log.debug("REST request to update Korisnik : {}", korisnikDTO);
@@ -91,7 +89,7 @@ public class KorisnikResource {
      * @return the ResponseEntity with status 200 (OK) and the list of korisniks in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-    @GetMapping("/korisniks")
+    @GetMapping("/svikorisnici")
     @Timed
     public ResponseEntity<List<KorisnikDTO>> getAllKorisniks(@ApiParam Pageable pageable)
         throws URISyntaxException {
