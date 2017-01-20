@@ -53,7 +53,7 @@ public class ListaResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new listaDTO, or with status 400 (Bad Request) if the lista has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/listas")
+    @PostMapping("/dodavanjeListe")
     @Timed
     public ResponseEntity<ListaDTO> createLista(@RequestBody ListaDTO listaDTO) throws URISyntaxException {
         log.debug("REST request to save Lista : {}", listaDTO);
@@ -75,7 +75,7 @@ public class ListaResource {
      * or with status 500 (Internal Server Error) if the listaDTO couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/listas")
+    @PutMapping("/izmenaListe")
     @Timed
     public ResponseEntity<ListaDTO> updateLista(@RequestBody ListaDTO listaDTO) throws URISyntaxException {
         log.debug("REST request to update Lista : {}", listaDTO);
@@ -95,15 +95,15 @@ public class ListaResource {
      * @return the ResponseEntity with status 200 (OK) and the list of listas in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-    @GetMapping("/listas")
-    @Timed
-    public ResponseEntity<List<ListaDTO>> getAllListas(@ApiParam Pageable pageable)
-        throws URISyntaxException {
-        log.debug("REST request to get a page of Listas");
-        Page<ListaDTO> page = listaService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/listas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+//    @GetMapping("/liste")
+//    @Timed
+//    public ResponseEntity<List<ListaDTO>> getAllListas(@ApiParam Pageable pageable)
+//        throws URISyntaxException {
+//        log.debug("REST request to get a page of Listas");
+//        Page<ListaDTO> page = listaService.findAll(pageable);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/listas");
+//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+//    }
 
     /**
      * GET  /listas/:id : get the "id" lista.
@@ -111,7 +111,7 @@ public class ListaResource {
      * @param id the id of the listaDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the listaDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/userlista")
+    @GetMapping("/korisnikoveListe")
     @Timed
     public ResponseEntity<List<ListaDTO>> getLista(HttpServletRequest httpServletRequest) {
        // log.debug("REST request to get Lista : {}", id);
@@ -133,7 +133,7 @@ public class ListaResource {
      * @param id the id of the listaDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/listas/{id}")
+    @DeleteMapping("/brisanjeListe/{id}")
     @Timed
     public ResponseEntity<Void> deleteLista(@PathVariable Long id) {
         log.debug("REST request to delete Lista : {}", id);
