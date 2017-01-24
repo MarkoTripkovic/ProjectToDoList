@@ -61,27 +61,22 @@ public class TokenProvider {
     public String createToken(Authentication authentication) throws UnsupportedEncodingException {
     	
     	Korisnik korisnik = korisnikRepository.findByUsername(authentication.getName());
-    	System.out.println(korisnik.getPassword());
-    	Long id = korisnik.getRola().getId();
-    	System.out.println(id);
-    	System.out.println(korisnik.getRola().getName());
     	GrantedAuthority auth = new SimpleGrantedAuthority(korisnik.getRola().getName());
         return Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY,auth)
-            .claim(ID_KEY, korisnik.getId())
+            .claim(ID_KEY,korisnik.getId())
             .signWith(SignatureAlgorithm.HS256, secretKey.getBytes("UTF-8"))            
             .compact();
     }
 
     public Authentication getAuthentication(String token) throws ClaimJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
-    	System.out.println("get autenticication");
         Claims claims = Jwts.parser()
             .setSigningKey(secretKey.getBytes("UTF-8"))
             .parseClaimsJws(token)
             .getBody();
-        System.out.println("claims");
 
+        
         Collection<? extends GrantedAuthority> authorities =
             Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)

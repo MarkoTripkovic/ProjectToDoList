@@ -114,7 +114,7 @@ public class ListaResourceIntTest {
         // Create the Lista
         ListaDTO listaDTO = listaMapper.listaToListaDTO(lista);
 
-        restListaMockMvc.perform(post("/api/listas")
+        restListaMockMvc.perform(post("/api/dodavanjeListe")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(listaDTO)))
             .andExpect(status().isCreated());
@@ -140,7 +140,7 @@ public class ListaResourceIntTest {
         ListaDTO existingListaDTO = listaMapper.listaToListaDTO(existingLista);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restListaMockMvc.perform(post("/api/listas")
+        restListaMockMvc.perform(post("/api/dodavanjeListe")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(existingListaDTO)))
             .andExpect(status().isBadRequest());
@@ -157,7 +157,7 @@ public class ListaResourceIntTest {
         listaRepository.saveAndFlush(lista);
 
         // Get all the listaList
-        restListaMockMvc.perform(get("/api/listas?sort=id,desc"))
+        restListaMockMvc.perform(get("/api/liste"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lista.getId().intValue())))
@@ -174,7 +174,7 @@ public class ListaResourceIntTest {
         listaRepository.saveAndFlush(lista);
 
         // Get the lista
-        restListaMockMvc.perform(get("/api/listas/{id}", lista.getId()))
+        restListaMockMvc.perform(get("/api/itemizListe/{id}", lista.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(lista.getId().intValue()))
@@ -208,7 +208,7 @@ public class ListaResourceIntTest {
                 .status(UPDATED_STATUS);
         ListaDTO listaDTO = listaMapper.listaToListaDTO(updatedLista);
 
-        restListaMockMvc.perform(put("/api/listas")
+        restListaMockMvc.perform(put("/api/izmenaListe")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(listaDTO)))
             .andExpect(status().isOk());
@@ -232,7 +232,7 @@ public class ListaResourceIntTest {
         ListaDTO listaDTO = listaMapper.listaToListaDTO(lista);
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restListaMockMvc.perform(put("/api/listas")
+        restListaMockMvc.perform(put("/api/izmenaListe")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(listaDTO)))
             .andExpect(status().isCreated());
@@ -250,7 +250,7 @@ public class ListaResourceIntTest {
         int databaseSizeBeforeDelete = listaRepository.findAll().size();
 
         // Get the lista
-        restListaMockMvc.perform(delete("/api/listas/{id}", lista.getId())
+        restListaMockMvc.perform(delete("/api/brisanjeListe/{id}", lista.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 

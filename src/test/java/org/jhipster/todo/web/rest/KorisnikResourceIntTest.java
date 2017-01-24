@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +51,7 @@ public class KorisnikResourceIntTest {
 
     private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
     private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
+    private static HttpServletRequest httpServletRequest;
 
     @Inject
     private KorisnikRepository korisnikRepository;
@@ -108,7 +112,7 @@ public class KorisnikResourceIntTest {
         // Create the Korisnik
         KorisnikDTO korisnikDTO = korisnikMapper.korisnikToKorisnikDTO(korisnik);
 
-        restKorisnikMockMvc.perform(post("/api/korisniks")
+        restKorisnikMockMvc.perform(post("/api/dodavanjekorisnika")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(korisnikDTO)))
             .andExpect(status().isCreated());
@@ -133,7 +137,7 @@ public class KorisnikResourceIntTest {
         KorisnikDTO existingKorisnikDTO = korisnikMapper.korisnikToKorisnikDTO(existingKorisnik);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restKorisnikMockMvc.perform(post("/api/korisniks")
+        restKorisnikMockMvc.perform(post("/api/dodavanjekorisnika")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(existingKorisnikDTO)))
             .andExpect(status().isBadRequest());
@@ -150,7 +154,7 @@ public class KorisnikResourceIntTest {
         korisnikRepository.saveAndFlush(korisnik);
 
         // Get all the korisnikList
-        restKorisnikMockMvc.perform(get("/api/korisniks?sort=id,desc"))
+        restKorisnikMockMvc.perform(get("/api/svikorisnici"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(korisnik.getId().intValue())))
@@ -166,7 +170,7 @@ public class KorisnikResourceIntTest {
         korisnikRepository.saveAndFlush(korisnik);
 
         // Get the korisnik
-        restKorisnikMockMvc.perform(get("/api/korisniks/{id}", korisnik.getId()))
+        restKorisnikMockMvc.perform(get("/api/korisnik/{id}", korisnik.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(korisnik.getId().intValue()))
@@ -198,7 +202,7 @@ public class KorisnikResourceIntTest {
                 .password(UPDATED_PASSWORD);
         KorisnikDTO korisnikDTO = korisnikMapper.korisnikToKorisnikDTO(updatedKorisnik);
 
-        restKorisnikMockMvc.perform(put("/api/korisniks")
+        restKorisnikMockMvc.perform(put("/api/izmenainfokorisnika")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(korisnikDTO)))
             .andExpect(status().isOk());
@@ -221,7 +225,7 @@ public class KorisnikResourceIntTest {
         KorisnikDTO korisnikDTO = korisnikMapper.korisnikToKorisnikDTO(korisnik);
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restKorisnikMockMvc.perform(put("/api/korisniks")
+        restKorisnikMockMvc.perform(put("/api//izmenainfokorisnika")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(korisnikDTO)))
             .andExpect(status().isCreated());

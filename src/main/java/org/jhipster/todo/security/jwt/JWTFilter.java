@@ -34,15 +34,14 @@ public class JWTFilter extends GenericFilterBean {
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
             String jwt = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
-            System.out.println("token"+jwt);
+            	
             if(jwt!=null){
-            	jwt = resolveToken(jwt);
-            }
+            		jwt = resolveToken(jwt);
+            	}
             
             if (StringUtils.hasText(jwt)) {
-            	System.out.println(this.tokenProvider.validateToken(jwt));
                 if (this.tokenProvider.validateToken(jwt)) {
-                	System.out.println("valid token");
+                	
                     Authentication authentication = this.tokenProvider.getAuthentication(jwt);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
@@ -55,12 +54,7 @@ public class JWTFilter extends GenericFilterBean {
     }
 
     private String resolveToken(String token){
-    	System.out.println("reslove token");
         String bearerToken = token;
-        System.out.println("bearer "+bearerToken);
-        System.out.println(StringUtils.hasText(bearerToken));
-        //bearerToken = "Bearer "+bearerToken;
-        System.out.println(bearerToken.startsWith("Bearer "));
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             String jwt = bearerToken.substring(7, bearerToken.length());
             return jwt;

@@ -95,15 +95,15 @@ public class ListaResource {
      * @return the ResponseEntity with status 200 (OK) and the list of listas in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-//    @GetMapping("/liste")
-//    @Timed
-//    public ResponseEntity<List<ListaDTO>> getAllListas(@ApiParam Pageable pageable)
-//        throws URISyntaxException {
-//        log.debug("REST request to get a page of Listas");
-//        Page<ListaDTO> page = listaService.findAll(pageable);
-//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/listas");
-//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-//    }
+    @GetMapping("/liste")
+    @Timed
+   public ResponseEntity<List<ListaDTO>> getAllListas(@ApiParam Pageable pageable)
+      throws URISyntaxException {
+       log.debug("REST request to get a page of Listas");
+       Page<ListaDTO> page = listaService.findAll(pageable);
+      HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/listas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     /**
      * GET  /listas/:id : get the "id" lista.
@@ -114,10 +114,8 @@ public class ListaResource {
     @GetMapping("/korisnikoveListe")
     @Timed
     public ResponseEntity<List<ListaDTO>> getLista(HttpServletRequest httpServletRequest) {
-       // log.debug("REST request to get Lista : {}", id);
     	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
     	Long id = Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
-       // ListaDTO listaDTO = listaService.findOne(id);*/
     	List<ListaDTO> dto = (List<ListaDTO>) listaService.findAllByUserId(id);
         
         return Optional.ofNullable(dto)
@@ -125,6 +123,12 @@ public class ListaResource {
                 result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    @GetMapping("/itemizListe/{id}")
+    @Timed
+    public ResponseEntity<ListaDTO> getItemFromList(@PathVariable Long id) {
+        ListaDTO dto = listaService.findOne(id);
+        return ResponseEntity.ok().body(dto);
     }
 
     /**

@@ -57,7 +57,7 @@ public class KorisnikResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("korisnik", "idexists", "A new korisnik cannot already have an ID")).body(null);
         }
         KorisnikDTO result = korisnikService.save(korisnikDTO);
-        return ResponseEntity.ok() .body(result);
+        return ResponseEntity.created(new URI("/api/listas/" + result.getId())) .body(result);
     }
 
     /**
@@ -95,7 +95,7 @@ public class KorisnikResource {
         throws URISyntaxException {
         log.debug("REST request to get a page of Korisniks");
         Page<KorisnikDTO> page = korisnikService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/korisniks");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/svikorisnici");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
