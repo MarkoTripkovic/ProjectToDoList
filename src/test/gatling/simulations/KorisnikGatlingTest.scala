@@ -39,45 +39,51 @@ class KorisnikGatlingTest extends Simulation {
 
     val headers_http_authenticated = Map(
         "Accept" -> """application/json""",
-        "Authorization" -> "${eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOnsiYXV0aG9yaXR5IjoiYWRtaW4ifSwiaWQiOjEwMjN9.ya-oDpUHmD3aO5IZbCc2kSxmm7gsXaG_1-J1vYWAB8I}"
+        "Authorization" -> "${access_token}"
     )
 
     val scn = scenario("Test the Korisnik entity")
         .exec(http("First unauthenticated request")
-        .get("/api/account")
+        .get("/api/korisnik")
         .headers(headers_http)
         .check(status.is(401))).exitHereIfFailed
         .pause(10)
+
         .exec(http("Authentication")
-        .post("/api/authenticate")
+        .post("/api/login")
         .headers(headers_http_authentication)
         .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
         .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
         .pause(1)
+
         .exec(http("Authenticated request")
-        .get("/api/account")
+        .get("/api/korisnik")
         .headers(headers_http_authenticated)
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
             exec(http("Get all korisniks")
-            .get("/api/korisniks")
+            .get("/api/svikorisnici")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
+
             .exec(http("Create new korisnik")
-            .post("/api/korisniks")
+            .post("/api/dodavanjekorisnika")
             .headers(headers_http_authenticated)
             .body(StringBody("""{"id":null, "username":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "password":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_korisnik_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
+
                 exec(http("Get created korisnik")
-                .get("${new_korisnik_url}")
+                .get("/api/korisnik")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
+
+
             .exec(http("Delete created korisnik")
             .delete("${new_korisnik_url}")
             .headers(headers_http_authenticated))
