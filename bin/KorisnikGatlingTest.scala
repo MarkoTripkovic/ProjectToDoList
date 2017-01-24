@@ -39,7 +39,7 @@ class KorisnikGatlingTest extends Simulation {
 
     val headers_http_authenticated = Map(
         "Accept" -> """application/json""",
-        "Authorization" -> "${access_token}"
+        "Authorization" -> "${Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOnsiYXV0aG9yaXR5IjoiYWRtaW4ifSwiaWQiOjEwMjN9.ya-oDpUHmD3aO5IZbCc2kSxmm7gsXaG_1-J1vYWAB8I}"
     )
 
     val scn = scenario("Test the Korisnik entity")
