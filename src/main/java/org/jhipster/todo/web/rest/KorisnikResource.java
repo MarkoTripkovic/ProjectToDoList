@@ -117,7 +117,7 @@ public class KorisnikResource {
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
     /**
@@ -126,12 +126,13 @@ public class KorisnikResource {
      * @param id the id of the korisnikDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/korisniks/{id}")
+    @DeleteMapping("/korisnik")
     @Timed
-    public ResponseEntity<Void> deleteKorisnik(@PathVariable Long id) {
-        log.debug("REST request to delete Korisnik : {}", id);
+    public ResponseEntity<Void> deleteKorisnik(HttpServletRequest httpServletRequest) {
+    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+    	Long id =Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
         korisnikService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("korisnik", id.toString())).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("korisnik", id.toString())).build();
     }
 
 }
