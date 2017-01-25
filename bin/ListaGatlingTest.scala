@@ -44,29 +44,29 @@ class ListaGatlingTest extends Simulation {
 
     val scn = scenario("Test the Lista entity")
         .exec(http("First unauthenticated request")
-        .get("/api/account")
+        .get("/api/korisnik")
         .headers(headers_http)
         .check(status.is(401))).exitHereIfFailed
         .pause(10)
         .exec(http("Authentication")
-        .post("/api/authenticate")
+        .post("/api/login")
         .headers(headers_http_authentication)
         .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
         .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
         .pause(1)
         .exec(http("Authenticated request")
-        .get("/api/account")
+        .get("/api/korisnik")
         .headers(headers_http_authenticated)
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
             exec(http("Get all listas")
-            .get("/api/listas")
+            .get("/api/korisnikoveListe")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
             .exec(http("Create new lista")
-            .post("/api/listas")
+            .post("/api/dodavanjeListe")
             .headers(headers_http_authenticated)
             .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "text":"SAMPLE_TEXT", "date":"2020-01-01T00:00:00.000Z", "status":null}""")).asJSON
             .check(status.is(201))

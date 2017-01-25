@@ -57,7 +57,7 @@ public class KorisnikResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("korisnik", "idexists", "A new korisnik cannot already have an ID")).body(null);
         }
         KorisnikDTO result = korisnikService.save(korisnikDTO);
-        return ResponseEntity.created(new URI("/api/listas/" + result.getId())) .body(result);
+        return ResponseEntity.created(new URI("/api/korisnik/" + result.getId())) .body(result);
     }
 
     /**
@@ -126,13 +126,13 @@ public class KorisnikResource {
      * @param id the id of the korisnikDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/korisnik")
+    @DeleteMapping("/korisnik/{login}")
     @Timed
-    public ResponseEntity<Void> deleteKorisnik(HttpServletRequest httpServletRequest) {
-    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
-    	Long id =Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
-        korisnikService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("korisnik", id.toString())).build();
+    public ResponseEntity<Void> deleteKorisnik(@PathVariable Long login) {
+//    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+//    	Long id =Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
+        korisnikService.delete(login);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("korisnik", login.toString())).build();
     }
 
 }

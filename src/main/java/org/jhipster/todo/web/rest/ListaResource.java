@@ -61,7 +61,7 @@ public class ListaResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("lista", "idexists", "A new lista cannot already have an ID")).body(null);
         }
         ListaDTO result = listaService.save(listaDTO);
-        return ResponseEntity.created(new URI("/api/listas/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/itemizListe/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("lista", result.getId().toString()))
             .body(result);
     }
@@ -137,7 +137,7 @@ public class ListaResource {
      * @param id the id of the listaDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/brisanjeListe/{id}")
+    @DeleteMapping("/itemizListe/{id}")
     @Timed
     public ResponseEntity<Void> deleteLista(@PathVariable Long id) {
         log.debug("REST request to delete Lista : {}", id);
