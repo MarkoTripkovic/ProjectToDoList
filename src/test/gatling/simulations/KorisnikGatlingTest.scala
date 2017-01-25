@@ -84,7 +84,7 @@ class KorisnikGatlingTest extends Simulation {
             }
 
 
-            .exec(http("Delete created korisnik")
+            .exec(http("Delete korisnik")
             .delete("${new_korisnik_url}")
             .headers(headers_http_authenticated))
             .pause(10)

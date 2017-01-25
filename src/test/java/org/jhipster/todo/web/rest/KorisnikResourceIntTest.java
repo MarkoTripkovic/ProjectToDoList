@@ -51,6 +51,7 @@ public class KorisnikResourceIntTest {
 
     private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
     private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
+    
     private static HttpServletRequest httpServletRequest;
 
     @Inject
