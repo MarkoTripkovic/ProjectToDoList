@@ -129,8 +129,6 @@ public class KorisnikResource {
     @DeleteMapping("/korisnik/{login}")
     @Timed
     public ResponseEntity<Void> deleteKorisnik(@PathVariable Long login) {
-//    	String token = httpServletRequest.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
-//    	Long id =Long.valueOf(tokenProvider.getUserIdFromToken(token).longValue());
         korisnikService.delete(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("korisnik", login.toString())).build();
     }
