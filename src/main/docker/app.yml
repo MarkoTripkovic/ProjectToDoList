@@ -5,11 +5,11 @@ services:
         external_links:
             - todolist-postgresql:postgresql
         environment:
-            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_PROFILES_ACTIVE=dev,swagger
             - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/todolist
-            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - JHIPSTER_SLEEP=8 # gives time for the database to boot before the application
         ports:
-            - 8080:8080
+            - 8008:8080
     todolist-postgresql:
         extends:
             file: postgresql.yml

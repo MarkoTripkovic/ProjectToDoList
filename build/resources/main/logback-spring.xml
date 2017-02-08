@@ -22,7 +22,7 @@
     </appender>
 -->
 
-    <logger name="org.jhipster.todo" level="DEBUG"/>
+    <logger name="org.jhipster.todo" level="INFO"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>
@@ -56,7 +56,7 @@
         <resetJUL>true</resetJUL>
     </contextListener>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 

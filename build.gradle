@@ -224,7 +224,14 @@ dependencies {
 clean {
     delete "target"
 }
-
+task deploy (dependsOn: war){
+	def WEBAPPS_HOME = System.getenv("CATALINA_HOME") + '/webapps'
+    copy {
+        from "build/libs"
+        into WEBAPPS_HOME
+        include "*.war"
+    }
+    }
 task cleanResources(type: Delete) {
     delete 'build/resources'
 }
@@ -235,6 +242,7 @@ task wrapper(type: Wrapper) {
 
 task stage(dependsOn: 'bootRepackage') {
 }
+
 
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo

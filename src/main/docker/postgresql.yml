@@ -3,10 +3,13 @@ services:
     todolist-postgresql:
         container_name: todolist-postgresql
         image: postgres:9.5.4
-        # volumes:
-        #     - ~/volumes/jhipster/todolist/postgresql/:/var/lib/postgresql/
+        volumes: 
+         - ~/volumes/jhipster/todolist/postgresql/:/var/lib/postgresql/
         environment:
-            - POSTGRES_USER=todolist
-            - POSTGRES_PASSWORD=
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=todolist
         ports:
-            - 5432:5432
+            - 5444:5432
+
+        hostname: localhost
