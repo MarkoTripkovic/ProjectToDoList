@@ -55,6 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+        
             .antMatchers(HttpMethod.OPTIONS, "/**")
             .antMatchers("/app/**/*.{js,html}")
             .antMatchers("/bower_components/**")
@@ -80,6 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
             .authorizeRequests()
+            
             .antMatchers("/api/login").permitAll()
             .antMatchers("/api/dodavanjekorisnika").permitAll()
             .antMatchers("/api/account/reset_password/init").permitAll()
@@ -90,6 +92,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/v2/api-docs/**").permitAll()
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/api/_search/meetings/**").permitAll()
+            .antMatchers("/api/_search/meetings").permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
         .and()
             .apply(securityConfigurerAdapter());
 

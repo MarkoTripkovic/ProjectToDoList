@@ -3,6 +3,7 @@ package org.jhipster.todo.web.filter;
 import org.jhipster.todo.config.JHipsterProperties;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -36,12 +37,24 @@ public class CachingHttpHeadersFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-
+    	System.out.println("FILTER!!!!!!!!!!!!!!!!!");
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-
+        HttpServletRequest httprequest = (HttpServletRequest) request;
+        httpResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        httpResponse.setHeader("Access-Control-Max-Age", "86400"); // 24 Hours
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-auth-token");
         httpResponse.setHeader("Cache-Control", "max-age=" + CACHE_TIME_TO_LIVE + ", public");
         httpResponse.setHeader("Pragma", "cache");
-
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpResponse.setHeader("Access-Control-Expose-Headers", "DAV, content-length, Allow");
+        if (httprequest.getMethod().equals("OPTIONS")) {
+        	httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        } else {
+            chain.doFilter(request, response);
+        }
+    
         // Setting Expires header, for proxy caching
         httpResponse.setDateHeader("Expires", CACHE_TIME_TO_LIVE + System.currentTimeMillis());
 
