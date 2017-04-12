@@ -24,10 +24,10 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5444/todolist
+        url: jdbc:postgresql://localhost:5432/todolist
         name:
-        username: user
-        password: password
+        username: postgres
+        password: postgres
     jpa:
         database-platform: org.jhipster.todo.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -56,7 +56,7 @@ liquibase:
     contexts: dev
 
 server:
-    port: 8080
+    port: 8099
 
 # ===================================================================
 # JHipster specific properties
